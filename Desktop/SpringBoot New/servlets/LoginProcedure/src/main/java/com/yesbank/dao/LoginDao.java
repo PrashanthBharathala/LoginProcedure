@@ -17,6 +17,7 @@ public class LoginDao {
 @Autowired
 private SimpleJdbcCall call;
 
+/*nkjnkfhdskjfkj*/
 public TopicPojo getLoginDetails(String adid, String password)
 {
 	call.setProcedureName("LOGIN_PROCEDURE_SAMPLE");
