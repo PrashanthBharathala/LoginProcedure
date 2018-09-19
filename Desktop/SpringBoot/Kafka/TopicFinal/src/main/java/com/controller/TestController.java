@@ -1,7 +1,12 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
@@ -11,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pojo.Student;
+
 import kafka.admin.AdminUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.utils.ZkUtils;
@@ -19,7 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class TestController
 {
 
@@ -102,6 +109,48 @@ public class TestController
 			    System.out.println("Got the topics");
 			    zkClient.close();
 		return list;
+		
+	}
+	static int count=0;
+	@RequestMapping("/getTableData.do")
+	public String getTabledata(HttpSession session,HttpServletRequest req,@RequestParam("colname")String colname,@RequestParam("datatype")String datatype)
+	{
+		List<Student> list=null;
+		 count=++count;
+		ServletContext ctx=req.getServletContext();
+		
+		if(ctx.getAttribute("uday")==null) {
+			list=new ArrayList<>();
+			
+			System.out.println("ëntered nill");
+		}else {
+			list=(List<Student>) ctx.getAttribute("uday");
+			
+		}
+		
+		list.add(new Student(count,colname,datatype));
+		ctx.setAttribute("uday", list);
+		
+		//System.out.println(session.getId());
+		//System.out.println(session.isNew());
+		
+		
+	
+		System.out.println("controller entereed");
+		return "index";
+		
+	}
+	
+	@RequestMapping("/submit.do")
+	public String getTabledata1( HttpSession session,HttpServletRequest req)
+	{
+		ServletContext ctx=req.getServletContext();
+		/*System.out.println(session.getId());
+		System.out.println(session.isNew());
+		*/
+		System.out.println(ctx.getAttribute("uday"));
+		System.out.println("controller entereed");
+		return "topicmaster";
 		
 	}
 }
